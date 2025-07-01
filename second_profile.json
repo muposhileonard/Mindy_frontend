@@ -1,0 +1,10 @@
+{
+  "username": "second_user",
+  "surname": "Tester",
+  "birthday": "2004-08-20",
+  "gender": "female",
+  "education": "Test School",
+  "occupation": "Test Account",
+  "bio": "Just testing stuff.",
+  "website": "https://test.mindy.app"
+}
