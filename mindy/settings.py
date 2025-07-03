@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+from dotenv import load_dotenv,load_dotenv()
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     
     'authengine',
     'profileengine',
+
+    'django_celery_results',
+    'django_celery_beat',
 ]
 
 AUTH_USER_MODEL = 'authengine.MindyUser'
@@ -141,3 +144,23 @@ import os
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+
+TWILIO_SID = os.getenv("TWILIO_SID")
+TWILIO_TOKEN = os.getenv("TWILIO_TOKEN")
+TWILIO_PHONE = os.getenv("TWILIO_PHONE")
+
+
+
+
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+
+
+CELERY_BROKER_URL = "rediss://default:AZgTAAIjcDE1YjU0YWRkNmE2Zjk0ZWQwYjM0ZWI5MDFmZmRkN2Y2MXAxMA@first-polliwog-38931.upstash.io:6379"
+CELERY_RESULT_BACKEND = "django-db"  # Optional, but useful
+
+
+
+

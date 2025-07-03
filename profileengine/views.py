@@ -139,3 +139,52 @@ def update_my_profile(request):
         return Response(ProfileSerializer(instance).data)
     else:
         return Response(serializer.errors, status=400)
+
+
+
+
+
+
+
+
+# profileengine/views.py
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_profile(request, pk):
+    try:
+        profile = Profile.objects.get(pk=pk)
+    except Profile.DoesNotExist:
+        return Response({'error': 'Profile not found'}, status=404)
+
+    # Privacy logic
+    if profile.is_private and profile.user != request.user and request.user not in profile.allowed_viewers.all():
+        return Response({'detail': 'This profile is private'}, status=403)
+
+    data = ProfileSerializer(profile).data
+
+    # Remove sensitive fields if not owner
+    if profile.user != request.user:
+        if profile.hide_birthday:
+            data.pop('birthday', None)
+        if profile.hide_last_active:
+            data.pop('last_active', None)
+
+    return Response(data)
+
+
+
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def download_my_data(request):
+    try:
+        profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        return Response({'error': 'Profile not found'}, status=404)
+
+    data = ProfileSerializer(profile).data
+    response = Response(data, content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename="mindy_user_data.json"'
+    return response

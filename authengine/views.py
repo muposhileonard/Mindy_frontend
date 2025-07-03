@@ -4,6 +4,27 @@ from rest_framework import status
 from django.contrib.auth import authenticate
 from .models import MindyUser
 from .serializers import RegisterSerializer, LoginSerializer
+# pip install twilio
+from twilio.rest import Client
+from django.conf import settings
+
+def send_verification_code(contact):
+    code = PhoneOTP.generate_code()
+
+    PhoneOTP.objects.update_or_create(
+        contact=contact,
+        defaults={'code': code, 'verified': False}
+    )
+
+    client = Client(settings.TWILIO_SID, settings.TWILIO_TOKEN)
+    message = client.messages.create(
+        body=f"Your Mindy verification code is: {code}",
+        from_=settings.TWILIO_PHONE,
+        to=contact
+    )
+
+    return code
+
 
 class RegisterView(APIView):
     def post(self, request):
@@ -26,3 +47,9 @@ class LoginView(APIView):
         return Response(serializer.errors, status=400)
 
 # Create your views here.
+
+
+
+
+
+
