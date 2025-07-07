@@ -13,8 +13,8 @@ urlpatterns = [
     path('auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('profile/', include('profileengine.urls')),
     path('profile/<int:pk>/', ProfileDetailView.as_view()),
-]
-
+    path('feed/', include('feed.urls')),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

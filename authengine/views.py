@@ -7,6 +7,7 @@ from .serializers import RegisterSerializer, LoginSerializer
 # pip install twilio
 from twilio.rest import Client
 from django.conf import settings
+from rest_framework.permissions import  IsAuthenticated
 
 def send_verification_code(contact):
     code = PhoneOTP.generate_code()
@@ -46,10 +47,11 @@ class LoginView(APIView):
             return Response({'error': 'Invalid credentials'}, status=401)
         return Response(serializer.errors, status=400)
 
-# Create your views here.
+# Create your views here
 
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
 
-
-
-
-
+    def post(self, request):
+        # If you're using JWT and storing token client-side, just return success
+        return Response({"message": "Logged out successfully"})
